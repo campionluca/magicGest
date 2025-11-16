@@ -4,13 +4,30 @@ Gestionale per collezione di carte Magic: The Gathering con monitoraggio prezzi 
 
 ## Funzionalità
 
+### Core
 - ✅ **Gestione Collezione**: Aggiungi, modifica e rimuovi carte dalla tua collezione
 - ✅ **Ricerca Carte**: Cerca carte tramite l'API Scryfall con filtri avanzati
 - ✅ **Gestione Mazzi**: Crea e gestisci i tuoi mazzi (mainboard + sideboard)
-- ✅ **Monitoraggio Prezzi**: Traccia i prezzi delle carte su diverse piattaforme
-- ✅ **Grafici Storici**: Visualizza l'andamento dei prezzi nel tempo
 - ✅ **Import/Export**: Esporta la collezione in JSON o CSV, esporta mazzi in formato MTGO
 - ✅ **Statistiche**: Visualizza statistiche della collezione (valore totale, carte per set, ecc.)
+
+### Monitoraggio Prezzi
+- ✅ **Tracking Prezzi**: Traccia i prezzi delle carte su diverse piattaforme
+- ✅ **Grafici Storici**: Visualizza l'andamento dei prezzi nel tempo
+- ✅ **Alert Prezzi**: Notifiche quando una carta raggiunge il prezzo target
+- ✅ **Trend Mercato**: Visualizza top carte in crescita/calo
+
+### Wishlist & Budget
+- ✅ **Wishlist**: Lista carte desiderate con priorità e prezzo massimo
+- ✅ **Carte Acquistabili**: Trova carte della wishlist sotto il prezzo target
+- ✅ **Budget Tracker**: Traccia spese e vendite per la collezione
+- ✅ **Storico Valore**: Grafici del valore della collezione nel tempo
+
+### Analisi Mazzi
+- ✅ **Statistiche Avanzate**: Curva di mana, distribuzione colori e tipi
+- ✅ **Analizzatore Deck**: Suggerimenti e problemi del mazzo
+- ✅ **Playtest Simulator**: Simula mani iniziali con mulligan
+- ✅ **Deck Value Tracking**: Monitora il valore del mazzo
 
 ## Stack Tecnologico
 
@@ -124,6 +141,35 @@ magicGest/
 - `GET /api/export/collection/csv` - Esporta collezione (CSV)
 - `GET /api/export/deck/:deckId` - Esporta mazzo (formato MTGO)
 
+### Wishlist
+- `GET /api/wishlist` - Ottieni wishlist
+- `POST /api/wishlist` - Aggiungi carta alla wishlist
+- `PUT /api/wishlist/:id` - Aggiorna item wishlist
+- `DELETE /api/wishlist/:id` - Rimuovi da wishlist
+- `GET /api/wishlist/affordable` - Carte acquistabili
+- `GET /api/wishlist/stats` - Statistiche wishlist
+
+### Alert Prezzi
+- `GET /api/alerts` - Lista alert
+- `POST /api/alerts` - Crea alert prezzo
+- `PUT /api/alerts/:id` - Aggiorna alert
+- `DELETE /api/alerts/:id` - Elimina alert
+- `POST /api/alerts/check` - Controlla alert attivi
+- `GET /api/alerts/triggered` - Alert scattati
+
+### Budget
+- `GET /api/budget/transactions` - Lista transazioni
+- `POST /api/budget/transactions` - Aggiungi transazione
+- `DELETE /api/budget/transactions/:id` - Elimina transazione
+- `GET /api/budget/summary` - Riepilogo budget
+- `POST /api/budget/snapshot` - Crea snapshot valore collezione
+- `GET /api/budget/value-history` - Storico valore collezione
+
+### Statistiche Mazzi
+- `GET /api/deck-stats/:deckId/stats` - Statistiche mazzo avanzate
+- `POST /api/deck-stats/:deckId/playtest/draw` - Simula mano iniziale
+- `GET /api/deck-stats/:deckId/analyze` - Analizza mazzo
+
 ## Database
 
 Il database SQLite viene creato automaticamente al primo avvio in `server/db/magicgest.db`.
@@ -134,6 +180,10 @@ Il database SQLite viene creato automaticamente al primo avvio in `server/db/mag
 - `decks` - Mazzi creati
 - `deck_cards` - Carte nei mazzi
 - `price_history` - Storico prezzi
+- `wishlist` - Carte desiderate
+- `price_alerts` - Alert su variazioni prezzi
+- `budget_transactions` - Transazioni acquisti/vendite
+- `collection_snapshots` - Snapshot valore collezione
 - `settings` - Impostazioni applicazione
 
 ## Come Usare
@@ -166,15 +216,40 @@ Il database SQLite viene creato automaticamente al primo avvio in `server/db/mag
 3. Clicca "Registra Prezzi Collezione" periodicamente
 4. Visualizza trend e grafici storici
 
+### 5. Gestire la Wishlist
+
+1. Vai su "Cerca Carte" e cerca una carta
+2. Clicca "⭐ Wishlist" per aggiungerla
+3. Imposta prezzo massimo e priorità
+4. Vai su "Wishlist" per visualizzare le carte
+5. Clicca "Mostra Acquistabili" per vedere carte sotto il prezzo target
+
+### 6. Tracciare il Budget
+
+1. Vai su "Budget"
+2. Clicca "+ Aggiungi Transazione" per registrare acquisti/vendite
+3. Visualizza grafici spese per mese
+4. Clicca "Crea Snapshot" per salvare il valore attuale della collezione
+5. Monitora l'andamento del valore nel tempo
+
+### 7. Analizzare i Mazzi
+
+1. Apri un mazzo e clicca "📊 Statistiche & Playtest"
+2. Visualizza curva di mana, distribuzione colori e tipi
+3. Leggi suggerimenti e problemi rilevati
+4. Usa il Playtest Simulator per simulare mani iniziali
+5. Testa il mazzo con mulligan
+
 ## Funzionalità Future
 
 - 🔲 Wrapper Electron per app desktop nativa
 - 🔲 Import collezione da CSV/JSON
-- 🔲 Wishlist di carte da acquistare
-- 🔲 Trading tracker
 - 🔲 Compatibilità con altri formati di esportazione (Archidekt, Moxfield)
 - 🔲 Scansione carte con fotocamera
-- 🔲 Notifiche variazioni prezzi significative
+- 🔲 Notifiche push per alert prezzi
+- 🔲 Condivisione mazzi con link pubblici
+- 🔲 Commander legality checker
+- 🔲 Deck recommendations basate su archetipi
 
 ## Licenza
 

@@ -137,6 +137,9 @@ export default function DeckDetail() {
           {deck.format && <p style={{ color: 'var(--accent)' }}>{deck.format}</p>}
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
+          <Link to={`/decks/${id}/stats`}>
+            <button className="secondary">📊 Statistiche & Playtest</button>
+          </Link>
           <button className="secondary" onClick={handleExportDeck}>
             Export Decklist
           </button>

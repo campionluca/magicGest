@@ -92,6 +92,63 @@ export const initDatabase = () => {
     )
   `);
 
+  // Wishlist table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS wishlist (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      card_id TEXT NOT NULL,
+      quantity INTEGER DEFAULT 1,
+      max_price REAL,
+      priority TEXT DEFAULT 'medium',
+      notes TEXT,
+      added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (card_id) REFERENCES cards(id)
+    )
+  `);
+
+  // Price alerts table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS price_alerts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      card_id TEXT NOT NULL,
+      platform TEXT NOT NULL,
+      target_price REAL NOT NULL,
+      condition TEXT DEFAULT 'below',
+      active BOOLEAN DEFAULT 1,
+      triggered BOOLEAN DEFAULT 0,
+      triggered_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (card_id) REFERENCES cards(id)
+    )
+  `);
+
+  // Budget transactions table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS budget_transactions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      type TEXT NOT NULL,
+      amount REAL NOT NULL,
+      currency TEXT DEFAULT 'USD',
+      description TEXT,
+      card_id TEXT,
+      quantity INTEGER,
+      transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (card_id) REFERENCES cards(id)
+    )
+  `);
+
+  // Collection value snapshots table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS collection_snapshots (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      total_value REAL,
+      total_cards INTEGER,
+      unique_cards INTEGER,
+      platform TEXT,
+      snapshot_date DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Create indexes for better performance
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_collection_card_id ON collection(card_id);
@@ -99,6 +156,9 @@ export const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_deck_cards_card_id ON deck_cards(card_id);
     CREATE INDEX IF NOT EXISTS idx_price_history_card_id ON price_history(card_id);
     CREATE INDEX IF NOT EXISTS idx_price_history_platform ON price_history(platform);
+    CREATE INDEX IF NOT EXISTS idx_wishlist_card_id ON wishlist(card_id);
+    CREATE INDEX IF NOT EXISTS idx_price_alerts_card_id ON price_alerts(card_id);
+    CREATE INDEX IF NOT EXISTS idx_budget_transactions_date ON budget_transactions(transaction_date);
   `);
 
   console.log('✅ Database initialized successfully');

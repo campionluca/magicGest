@@ -64,6 +64,28 @@ export default function Search() {
     }
   }
 
+  const handleAddToWishlist = async (card) => {
+    const maxPrice = prompt('Prezzo massimo che vuoi pagare per questa carta (opzionale):')
+    const priority = prompt('Priorità (high/medium/low):', 'medium')
+
+    try {
+      await fetch(`${API_URL}/wishlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          card_id: card.id,
+          quantity: 1,
+          max_price: maxPrice ? parseFloat(maxPrice) : null,
+          priority: priority || 'medium'
+        })
+      })
+      alert('Carta aggiunta alla wishlist!')
+    } catch (error) {
+      console.error('Error adding to wishlist:', error)
+      alert('Errore nell\'aggiunta alla wishlist')
+    }
+  }
+
   const getRarityBadgeClass = (rarity) => {
     const rarityMap = {
       common: 'common',
@@ -143,13 +165,22 @@ export default function Search() {
                 {card.prices?.usd && (
                   <p><strong>${card.prices.usd}</strong></p>
                 )}
-                <button
-                  onClick={() => handleAddToCollection(card)}
-                  disabled={addingCard === card.id}
-                  style={{ width: '100%', marginTop: '10px' }}
-                >
-                  {addingCard === card.id ? 'Aggiungendo...' : 'Aggiungi alla Collezione'}
-                </button>
+                <div style={{ display: 'flex', gap: '5px', marginTop: '10px' }}>
+                  <button
+                    onClick={() => handleAddToCollection(card)}
+                    disabled={addingCard === card.id}
+                    style={{ flex: 1 }}
+                  >
+                    {addingCard === card.id ? '...' : '+ Collezione'}
+                  </button>
+                  <button
+                    className="secondary"
+                    onClick={() => handleAddToWishlist(card)}
+                    style={{ flex: 1 }}
+                  >
+                    ⭐ Wishlist
+                  </button>
+                </div>
               </div>
             ))}
           </div>
